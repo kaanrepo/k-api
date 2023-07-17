@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
 
+    
 class IsStaffEditorPermission(permissions.DjangoModelPermissions):
     perms_map = {
         'GET': ['%(app_label)s.view_%(model_name)s'],
@@ -13,10 +14,8 @@ class IsStaffEditorPermission(permissions.DjangoModelPermissions):
     }
 
 
-    #It is checked in the view by permission_classes by permissions.IsAdminUser
-    # def has_permission(self, request, view):
-    #     if not request.user.is_staff:
-    #         return False
-    #     return super().has_permission(request,view)
-    
-
+class MyPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.username == 'staff':
+            return True
+        return True
