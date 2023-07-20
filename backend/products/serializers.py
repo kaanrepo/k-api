@@ -38,7 +38,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'sale_price',
             'my_discount',
             'product_edit_url',
-            'url'
+            'url',
+            'endpoint'
         ]
 
     def get_my_discount(self, obj):

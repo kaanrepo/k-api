@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from cfehome.env import config
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#-t!*qk50e-lbg=bn0$_%f7xqc$mq-93vim+cy*-%rhjizjg-&'
+
+SECRET_KEY = config("DJANGO_SECRET_KEY", default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +47,9 @@ INSTALLED_APPS = [
     #rest
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    #3rd party api services
+    'algoliasearch_django'
 ]
 
 MIDDLEWARE = [
@@ -131,6 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'api.authentication.TokenAuthentication'
     ],
@@ -140,4 +147,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 
         'rest_framework.pagination.LimitOffsetPagination' , 'PAGE_SIZE': 5
     ,
+}
+
+ALGOLIA = {
+    'APPLICATION_ID' : config('ALGOLIA_APPLICATION_ID', default=None),
+    'API_KEY' : config('ALGOLIA_API_KEY', default=None),
+    'INDEX_PREFIX' : 'cfe'
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=15),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
 }

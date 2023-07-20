@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.db.models import Q
 from django.db.models.query import QuerySet
+from rest_framework.reverse import reverse
+
 User = settings.AUTH_USER_MODEL 
 
 class ProductQuerySet(models.QuerySet):
@@ -33,6 +35,14 @@ class Product(models.Model):
     public = models.BooleanField(default=True)
 
     objects = ProductManager()
+
+    @property
+    def endpoint(self):
+        return reverse("product-detail-view", kwargs={"pk": self.pk})
+    
+
+    def is_public(self) -> bool: 
+        return self.public
 
     @property
     def sale_price(self):
